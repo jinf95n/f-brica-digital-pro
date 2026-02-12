@@ -1,4 +1,6 @@
 import { Check, Star, MessageCircle } from "lucide-react";
+import { motion } from "framer-motion";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 const WHATSAPP_LINK = "https://wa.me/5491100000000?text=Hola!%20Quiero%20mi%20sitio%20web";
 
@@ -52,25 +54,36 @@ const plans = [
 ];
 
 const PricingSection = () => {
+  const { ref, isVisible } = useScrollReveal();
+
   return (
-    <section className="py-20 md:py-28 bg-muted/50" id="planes">
+    <section className="py-20 md:py-28 bg-muted/50" id="planes" ref={ref}>
       <div className="container">
-        <div className="text-center max-w-2xl mx-auto mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={isVisible ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6 }}
+          className="text-center max-w-2xl mx-auto mb-16"
+        >
+          <span className="text-accent font-semibold text-sm uppercase tracking-widest">Precios</span>
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4 mt-2">
             Planes transparentes, sin letra chica
           </h2>
           <p className="text-muted-foreground text-lg">
             Elegí el que mejor se adapte a tu negocio.
           </p>
-        </div>
+        </motion.div>
 
         <div className="grid md:grid-cols-3 gap-8 items-start">
-          {plans.map((plan) => (
-            <div
+          {plans.map((plan, i) => (
+            <motion.div
               key={plan.name}
+              initial={{ opacity: 0, y: 30 }}
+              animate={isVisible ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.5, delay: 0.15 * i }}
               className={`rounded-2xl p-8 transition-all duration-300 ${
                 plan.featured
-                  ? "bg-primary text-primary-foreground shadow-2xl shadow-primary/20 scale-105 border-2 border-accent"
+                  ? "bg-primary text-primary-foreground shadow-2xl shadow-primary/20 md:scale-105 border-2 border-accent"
                   : "bg-card border border-border hover:shadow-lg"
               }`}
             >
@@ -94,14 +107,14 @@ const PricingSection = () => {
               <p className={`text-sm mb-1 ${plan.featured ? "text-primary-foreground/70" : "text-muted-foreground"}`}>
                 {plan.priceDetail}
               </p>
-              <p className={`text-sm font-medium mb-8 ${plan.featured ? "text-accent" : "text-accent"}`}>
+              <p className={`text-sm font-medium mb-8 text-accent`}>
                 {plan.extra}
               </p>
 
               <ul className="space-y-3 mb-8">
                 {plan.features.map((feature) => (
                   <li key={feature} className="flex items-start gap-3">
-                    <Check className={`w-5 h-5 mt-0.5 shrink-0 ${plan.featured ? "text-accent" : "text-accent"}`} />
+                    <Check className={`w-5 h-5 mt-0.5 shrink-0 text-accent`} />
                     <span className={`text-sm ${plan.featured ? "text-primary-foreground/90" : "text-muted-foreground"}`}>
                       {feature}
                     </span>
@@ -113,7 +126,7 @@ const PricingSection = () => {
                 href={WHATSAPP_LINK}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`w-full inline-flex items-center justify-center gap-2 font-bold py-3 px-6 rounded-xl transition-all duration-200 ${
+                className={`w-full inline-flex items-center justify-center gap-2 font-bold py-3 px-6 rounded-xl transition-all duration-300 hover:-translate-y-0.5 ${
                   plan.featured
                     ? "bg-accent text-accent-foreground hover:bg-accent/90 shadow-lg shadow-accent/25"
                     : "bg-primary text-primary-foreground hover:bg-primary/90"
@@ -122,7 +135,7 @@ const PricingSection = () => {
                 <MessageCircle className="w-4 h-4" />
                 Elegir Plan
               </a>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

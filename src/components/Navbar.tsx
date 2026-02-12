@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { Menu, X, MessageCircle } from "lucide-react";
+import logo from "@/assets/logo.png";
 
 const WHATSAPP_LINK = "https://wa.me/5491100000000?text=Hola!%20Quiero%20mi%20sitio%20web";
 
 const links = [
   { label: "El Problema", href: "#problema" },
   { label: "Solución", href: "#solucion" },
-  { label: "Cómo Funciona", href: "#como-funciona" },
+  { label: "Portfolio", href: "#portfolio" },
   { label: "Planes", href: "#planes" },
   { label: "FAQ", href: "#faq" },
 ];
@@ -17,8 +18,9 @@ const Navbar = () => {
   return (
     <nav className="fixed top-0 left-0 right-0 z-40 bg-primary/95 backdrop-blur-md border-b border-primary-foreground/10">
       <div className="container flex items-center justify-between h-16">
-        <a href="#" className="text-xl font-bold text-primary-foreground">
-          Fábrica Digital
+        <a href="#" className="flex items-center gap-3">
+          <img src={logo} alt="Fábrica Digital" className="h-9 w-auto" />
+          <span className="text-xl font-bold text-primary-foreground hidden sm:inline">Fábrica Digital</span>
         </a>
 
         {/* Desktop */}
@@ -55,7 +57,7 @@ const Navbar = () => {
 
       {/* Mobile menu */}
       {open && (
-        <div className="md:hidden bg-primary border-t border-primary-foreground/10 pb-4">
+        <div className="md:hidden bg-primary border-t border-primary-foreground/10 pb-4 animate-fade-in">
           {links.map((link) => (
             <a
               key={link.href}
