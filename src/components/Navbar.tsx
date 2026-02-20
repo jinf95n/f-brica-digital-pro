@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Menu, X, MessageCircle } from "lucide-react";
 import logo from "@/assets/logo.png";
 
-const WHATSAPP_LINK = "https://wa.me/5491100000000?text=Hola!%20Quiero%20mi%20sitio%20web";
+const WHATSAPP_LINK = "https://wa.me/5493517311760?text=Hola!%20Quiero%20mi%20sitio%20web";
 
 const links = [
   { label: "El Problema", href: "#problema" },
@@ -20,7 +20,6 @@ const Navbar = () => {
       <div className="container flex items-center justify-between h-16">
         <a href="#" className="flex items-center gap-3">
           <img src={logo} alt="Fábrica Digital" className="h-9 w-auto" />
-          <span className="text-xl font-bold text-primary-foreground hidden sm:inline">Fábrica Digital</span>
         </a>
 
         {/* Desktop */}
