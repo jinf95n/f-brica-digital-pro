@@ -2,14 +2,14 @@ import { Check, Star, MessageCircle } from "lucide-react";
 import { motion } from "framer-motion";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 
-const WHATSAPP_LINK = "https://wa.me/5491100000000?text=Hola!%20Quiero%20mi%20sitio%20web";
+const WHATSAPP_LINK = "https://wa.me/5493517311760?text=Hola!%20Quiero%20mi%20sitio%20web";
 
 const plans = [
   {
     name: "Plan Financiado",
     tagline: "Para empezar liviano",
-    price: "$110.000",
-    priceDetail: "x 2 cuotas (Setup)",
+    price: "$200.000",
+    priceDetail: "+ cuotas sin interés",
     extra: "+ Mantenimiento mensual",
     featured: false,
     features: [
@@ -23,13 +23,12 @@ const plans = [
   {
     name: "Plan Estándar",
     tagline: "Recomendado",
-    price: "$200.000",
+    price: "$400.000",
     priceDetail: "Pago único (Setup)",
     extra: "+ $25.000/mes mantenimiento",
     featured: true,
     features: [
       "Todo lo del Plan Financiado",
-      "Dominio .com.ar incluido",
       "Hosting premium",
       "Cambios mensuales incluidos",
       "Optimización SEO básica",
@@ -39,7 +38,7 @@ const plans = [
   {
     name: "Plan Anual",
     tagline: "Máximo ahorro",
-    price: "$450.000",
+    price: "$650.000",
     priceDetail: "Pago único",
     extra: "Todo incluido por 1 año",
     featured: false,

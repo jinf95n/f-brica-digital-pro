@@ -8,14 +8,13 @@ const Footer = () => {
           <div className="flex items-center gap-3">
             <img src={logo} alt="Fábrica Digital" className="h-10 w-auto" />
             <div>
-              <h3 className="text-xl font-bold text-primary-foreground">Fábrica Digital</h3>
               <p className="text-primary-foreground/60 text-sm">
                 Tu negocio merece verse profesional.
               </p>
             </div>
           </div>
           <div className="flex items-center gap-6 text-sm text-primary-foreground/60">
-            <a href="#" className="hover:text-primary-foreground transition-colors">
+            <a href="/terminos" className="hover:text-primary-foreground transition-colors">
               Términos y Condiciones
             </a>
             <a href="#" className="hover:text-primary-foreground transition-colors">

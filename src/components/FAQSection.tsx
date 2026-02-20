@@ -11,7 +11,7 @@ const faqs = [
   {
     question: "¿Por qué pagar un mantenimiento?",
     answer:
-      'Es como un empleado que trabaja 24/7 por $800 pesos al día. Incluye servidores seguros, actualizaciones de seguridad, certificado SSL renovado, backups y soporte técnico humano. Sin esto, tu sitio queda desprotegido y offline.',
+      'Es como un empleado que trabaja 24/7. Incluye servidores seguros, actualizaciones de seguridad, certificado SSL renovado, backups y soporte técnico humano. Sin esto, tu sitio queda desprotegido y offline.',
   },
   {
     question: "¿El sitio es mío?",
