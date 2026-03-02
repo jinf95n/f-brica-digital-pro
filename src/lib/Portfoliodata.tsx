@@ -1,3 +1,21 @@
+import imagen1 from "@/assets/demos/box.png";
+import imagen2 from "@/assets/demos/ceremonias.png";
+import imagen3 from "@/assets/demos/clinica.png";
+import imagen4 from "@/assets/demos/cm.png";
+import imagen5 from "@/assets/demos/courier.png";
+import imagen6 from "@/assets/demos/dj.png";
+import imagen7 from "@/assets/demos/italiano.png";
+import imagen8 from "@/assets/demos/metal.png";
+import imagen9 from "@/assets/demos/ojeda.png";
+import imagen10 from "@/assets/demos/portfolioji.png";
+import imagen11 from "@/assets/demos/steel-metal.png";
+import imagen12 from "@/assets/demos/steel.png";
+import imagen13 from "@/assets/demos/tecno.png";
+import imagen14 from "@/assets/demos/vinoteca.png";
+import imagen15 from "@/assets/demos/wanfix.png";
+import imagen16 from "@/assets/demos/yanina.png"; 
+
+
 export type CategoryKey =
   | "all"
   | "construction"
@@ -51,7 +69,7 @@ export const demos: DemoItem[] = [
     title: "Steel Frame — Landing Premium",
     categoryKey: "construction",
     href: "https://steel-frame-builders.vercel.app/",
-    cover: "src/assets/demos/steel.png",
+    cover: imagen12,
     tags: ["Alta conversión", "WhatsApp"],
     summary: "Comparativa, garantías y CTA directo.",
   },
@@ -59,7 +77,7 @@ export const demos: DemoItem[] = [
     title: "Construcciones",
     categoryKey: "construction",
     href: "https://mcmconstrucciones.vercel.app/",
-    cover: "src/assets/demos/ojeda.png",
+    cover: imagen9,
     tags: ["Llave en mano", "Formulario"],
     summary: "Servicios, proceso y calificador de lead.",
   },
@@ -67,7 +85,7 @@ export const demos: DemoItem[] = [
     title: "Idiomas — Aprende Italiano",
     categoryKey: "education",
     href: "https://academia-idiomas-mcm.vercel.app/",
-    cover: "src/assets/demos/italiano.png",
+    cover: imagen7,
     tags: ["Idioma", "Confianza"],
     summary: "Hablá italiano desde la primera clase.",
   },
@@ -75,7 +93,7 @@ export const demos: DemoItem[] = [
     title: "Portfolio — CV Digital",
     categoryKey: "personal_brand",
     href: "https://juannaveda.vercel.app/",
-    cover: "src/assets/demos/portfolioji.png",
+    cover: imagen10,
     tags: ["CV", "Portfolio"],
     summary: "Soluciones técnicas, prolijas y medibles.",
   },
@@ -83,7 +101,7 @@ export const demos: DemoItem[] = [
     title: "Yanina Sarmiento Estética",
     categoryKey: "beauty",
     href: "https://yaninasarmiento.com.ar/",
-    cover: "src/assets/demos/yanina.png",
+    cover: imagen16,
     tags: ["Estética", "Belleza", "Agenda"],
     summary: "Estudio profesional de estética y tratamientos.",
   },
@@ -91,7 +109,7 @@ export const demos: DemoItem[] = [
     title: "Tecno Flores",
     categoryKey: "retail",
     href: "https://tecno-flores.vercel.app/",
-    cover: "src/assets/demos/tecno.png",
+    cover: imagen13,
     tags: ["Tecnología", "Servicios", "Flores"],
     summary: "Servicio técnico especializado para floristerías.",
   },
@@ -99,7 +117,7 @@ export const demos: DemoItem[] = [
     title: "Facu Montiel DJ",
     categoryKey: "events",
     href: "https://facu-montiel-demomcm.vercel.app/",
-    cover: "src/assets/demos/dj.png",
+    cover: imagen6,
     tags: ["DJ", "Eventos", "Música"],
     summary: "Productor y DJ para fiestas y eventos.",
   },
@@ -107,7 +125,7 @@ export const demos: DemoItem[] = [
     title: "I Love Courier",
     categoryKey: "services",
     href: "https://ilovecourier-demo-mcm.vercel.app/",
-    cover: "src/assets/demos/courier.png",
+    cover: imagen5,
     tags: ["Courier", "Logística", "Exportación"],
     summary: "Servicio de courier y comercio exterior.",
   },
@@ -115,7 +133,7 @@ export const demos: DemoItem[] = [
     title: "Constantine Ceremonias",
     categoryKey: "events",
     href: "https://constantine-demomcm.vercel.app/",
-    cover: "src/assets/demos/ceremonias.png",
+    cover: imagen2,
     tags: ["Ceremonias", "Bodas", "Laicas"],
     summary: "Oficiante profesional de ceremonias elegantes.",
   },
@@ -123,7 +141,7 @@ export const demos: DemoItem[] = [
     title: "WAN FIX Transporte",
     categoryKey: "automotive",
     href: "https://wanfix-demo-mcm.vercel.app/",
-    cover: "src/assets/demos/wanfix.png",
+    cover: imagen15,
     tags: ["Transporte", "Logística", "Mendoza"],
     summary: "Transporte confiable y profesional en Mendoza.",
   },
@@ -131,7 +149,7 @@ export const demos: DemoItem[] = [
     title: "Box Security",
     categoryKey: "services",
     href: "https://boxsecurity-demo-mcm.vercel.app/",
-    cover: "src/assets/demos/box.png",
+    cover: imagen1,
     tags: ["Seguridad", "Alarmas", "Monitoreo"],
     summary: "Protección total para tu hogar y negocio.",
   },
@@ -139,7 +157,7 @@ export const demos: DemoItem[] = [
     title: "El Descubridor Vinoteca",
     categoryKey: "food",
     href: "https://el-descubridor-vinoteca.vercel.app/",
-    cover: "src/assets/demos/vinoteca.png",
+    cover: imagen14,
     tags: ["Vinos", "Gastronomía", "Premium"],
     summary: "Vinoteca de autor con selección exclusiva.",
   },
@@ -147,15 +165,15 @@ export const demos: DemoItem[] = [
     title: "VISAM Salud Mental",
     categoryKey: "health",
     href: "https://demo-visam.vercel.app/",
-    cover: "src/assets/demos/clinica.png",
+    cover: imagen3,
     tags: ["Salud Mental", "Terapias", "Bienestar"],
     summary: "Espacio dedicado a tu salud mental.",
   },
   {
-    title: "Meta Steel",
+    title: "Constructora Metal",
     categoryKey: "construction",
     href: "https://constructorametal-demomcm.vercel.app/",
-    cover: "src/assets/demos/metal.png",
+    cover: imagen8,
     tags: ["Construcción", "Desarrollos", "Steel Frame"],
     summary: "Constructora desarrollista premium en Córdoba.",
   },
@@ -163,7 +181,7 @@ export const demos: DemoItem[] = [
     title: "Carlos Mansilla",
     categoryKey: "personal_brand",
     href: "https://carlosmansilla.com.ar/",
-    cover: "src/assets/demos/cm.png",
+    cover: imagen4,
     tags: ["Growth Manager", "Project Manager", "Portfolio"],
     summary: "Growth & Project Manager profesional.",
   },
@@ -171,7 +189,7 @@ export const demos: DemoItem[] = [
     title: "MYC Steel Solutions",
     categoryKey: "construction",
     href: "https://myc-steel-solutions.vercel.app/",
-    cover: "src/assets/demos/steel-metal.png",
+    cover: imagen11,
     tags: ["Steel Frame", "Construcción", "Ingeniería"],
     summary: "Soluciones integrales en steel frame.",
   },
