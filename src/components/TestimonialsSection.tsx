@@ -5,19 +5,19 @@ import { useScrollReveal } from "@/hooks/useScrollReveal";
 const testimonials = [
   {
     name: "Martín R.",
-    business: "Pizzería Don Carlo",
+    business: "Pizzería",
     text: "En un día tenía mi sitio andando. Los pedidos por WhatsApp se duplicaron en la primera semana.",
     stars: 5,
   },
   {
     name: "Laura G.",
-    business: "Estudio Contable LG",
+    business: "Estudio Contable",
     text: "Mis clientes ahora me encuentran en Google. Antes solo me llegaban por boca en boca, ahora tengo consultas todos los días.",
     stars: 5,
   },
   {
     name: "Diego S.",
-    business: "Ferretería López",
+    business: "Ferretería",
     text: "El catálogo online me ahorra horas de atención. La gente ve los precios antes de venir y compra más.",
     stars: 5,
   },

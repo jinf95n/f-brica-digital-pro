@@ -1,4 +1,5 @@
 import logo from "@/assets/logo.png";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
@@ -14,12 +15,12 @@ const Footer = () => {
             </div>
           </div>
           <div className="flex items-center gap-6 text-sm text-primary-foreground/60">
-            <a href="/terminos" className="hover:text-primary-foreground transition-colors">
+            <Link to="/terminos" className="hover:text-primary-foreground transition-colors">
               Términos y Condiciones
-            </a>
-            <a href="#" className="hover:text-primary-foreground transition-colors">
+            </Link>
+            <Link to="/privacidad" className="hover:text-primary-foreground transition-colors">
               Política de Privacidad
-            </a>
+            </Link>
           </div>
         </div>
         <div className="border-t border-primary-foreground/10 mt-8 pt-8 text-center text-sm text-primary-foreground/40">
