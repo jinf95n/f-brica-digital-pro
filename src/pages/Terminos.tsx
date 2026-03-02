@@ -1,316 +1,165 @@
-import { Card, CardContent } from "@/components/ui/card";
 import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
+  Accordion, AccordionContent, AccordionItem, AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { ShieldCheck, FileLock2, CreditCard, Clock, Wrench, LifeBuoy, AlertTriangle } from "lucide-react";
+import { ShieldCheck, CreditCard, Clock, MessageCircle, FileCheck, AlertTriangle } from "lucide-react";
+import { Link } from "react-router-dom";
 
-type SlaRow = {
-  level: "P1" | "P2" | "P3";
-  label: string;
-  definition: string;
-  response: string;
-  channel: string;
-};
+type SlaRow = { level: "P1"|"P2"|"P3"; label: string; color: string; definition: string; response: string; channel: string; };
 
 const sla: SlaRow[] = [
-  {
-    level: "P1",
-    label: "Crítico",
-    definition:
-      "Sitio caído/offline. Error 500/404. Dominio no resuelve. Certificado SSL vencido.",
-    response: "< 4 horas (guardia 24/7)",
-    channel: 'WhatsApp (keyword: "URGENCIA")',
-  },
-  {
-    level: "P2",
-    label: "Estándar",
-    definition:
-      "Solicitudes de cambio: precios, fotos, textos, horarios. Consultas administrativas.",
-    response: "24 a 48 hs hábiles",
-    channel: "Formulario/Portal de Soporte",
-  },
-  {
-    level: "P3",
-    label: "Excluido",
-    definition:
-      "Problemas ajenos a la web (WiFi, correo en celular, redes sociales, hardware).",
-    response: "No aplica",
-    channel: "Se rechaza amablemente",
-  },
+  { level: "P1", label: "Crítico",   color: "#ef4444", definition: "Sitio caído u offline. Error 500/404. Dominio no resuelve. SSL vencido.", response: "< 4 horas (guardia activa)", channel: 'WhatsApp — keyword "URGENCIA"' },
+  { level: "P2", label: "Estándar",  color: "#f59e0b", definition: "Cambios de contenido: textos, precios, fotos, horarios, datos de contacto.", response: "24 a 48 hs hábiles", channel: "WhatsApp" },
+  { level: "P3", label: "Excluido",  color: "#6b7280", definition: "Problemas ajenos al sitio: WiFi, correo, redes sociales, hardware.", response: "No aplica", channel: "Se informa amablemente" },
 ];
 
-const IconBubble = ({ children }: { children: React.ReactNode }) => (
-  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+const TermCard = ({ icon, title, children }: { icon: React.ReactNode; title: string; children: React.ReactNode }) => (
+  <div className="rounded-xl border border-border/50 bg-card p-6">
+    <div className="flex items-center gap-3 mb-4">
+      <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary">{icon}</div>
+      <h3 className="font-semibold text-base text-foreground">{title}</h3>
+    </div>
     {children}
   </div>
 );
 
-const LegalTerms = () => {
-  return (
-    <section id="marco-legal" className="py-20 px-4 bg-card">
-      <div className="container">
-        {/* Header */}
-        <div className="text-center">
-          <p className="mb-3 text-sm uppercase tracking-[0.2em] text-muted-foreground">
-            Marco legal y reglas del servicio
-          </p>
-          <h1 className="font-['Playfair_Display'] text-3xl md:text-4xl font-semibold text-card-foreground">
-            Términos de contratación y soporte (SLA)
-          </h1>
-          <p className="mx-auto mt-3 max-w-3xl text-muted-foreground">
-            Resumen claro para clientes. Estos términos se consideran aceptados al abonar el setup o la primera cuota.
-          </p>
-        </div>
+const LegalTerms = () => (
+  <section id="terminos" className="py-16 px-4 bg-background">
+    <div className="container max-w-4xl mx-auto">
 
-        {/* Quick summary cards */}
-        <div className="mt-12 grid gap-6 lg:grid-cols-3">
-          <Card className="border-border/60">
-            <CardContent className="p-7">
-              <div className="flex items-start gap-4">
-                <IconBubble>
-                  <FileLock2 className="h-5 w-5" />
-                </IconBubble>
-                <div>
-                  <h3 className="font-['Playfair_Display'] text-xl font-semibold text-card-foreground">
-                    Propiedad y licencia
-                  </h3>
-                  <p className="mt-2 text-card-foreground/80">
-                    El servicio se brinda bajo modalidad <strong>SaaS</strong>: el cliente tiene licencia de uso mientras mantenga el abono al día.
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-border/60">
-            <CardContent className="p-7">
-              <div className="flex items-start gap-4">
-                <IconBubble>
-                  <CreditCard className="h-5 w-5" />
-                </IconBubble>
-                <div>
-                  <h3 className="font-['Playfair_Display'] text-xl font-semibold text-card-foreground">
-                    Pagos y continuidad
-                  </h3>
-                  <p className="mt-2 text-card-foreground/80">
-                    Abono mensual por adelantado. Mora prolongada implica suspensión automática y eventual baja definitiva.
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-border/60">
-            <CardContent className="p-7">
-              <div className="flex items-start gap-4">
-                <IconBubble>
-                  <LifeBuoy className="h-5 w-5" />
-                </IconBubble>
-                <div>
-                  <h3 className="font-['Playfair_Display'] text-xl font-semibold text-card-foreground">
-                    Soporte con SLA
-                  </h3>
-                  <p className="mt-2 text-card-foreground/80">
-                    Priorizamos incidentes críticos del sitio y gestionamos cambios por tickets, con tiempos de respuesta definidos.
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        <Separator className="my-12" />
-
-        {/* Accordion with the important terms */}
-        <div className="grid gap-6 lg:grid-cols-2">
-          <Card className="border-border/60">
-            <CardContent className="p-7">
-              <div className="flex items-center gap-3">
-                <ShieldCheck className="h-5 w-5 text-primary" />
-                <h2 className="font-['Playfair_Display'] text-2xl font-semibold text-card-foreground">
-                  Términos clave
-                </h2>
-              </div>
-
-              <Accordion type="single" collapsible className="mt-5">
-                <AccordionItem value="ip">
-                  <AccordionTrigger>Propiedad intelectual y derechos de uso</AccordionTrigger>
-                  <AccordionContent>
-                    <ul className="space-y-2 text-card-foreground/80">
-                      <li>
-                        <strong>Propiedad del cliente:</strong> identidad de marca (nombre/logos), contenido provisto (fotos/textos/videos) y titularidad del dominio.
-                      </li>
-                      <li>
-                        <strong>Propiedad de la agencia:</strong> código fuente, estructura tecnológica, integraciones, automatizaciones y diseño UI/UX desarrollados.
-                      </li>
-                      <li>
-                        <strong>Licencia de uso (SaaS):</strong> el sitio se utiliza mientras el abono mensual esté al día.
-                      </li>
-                      <li>
-                        <strong>Restricción:</strong> no se entrega el código fuente ni se migran archivos/proyectos a hosting externo; no existe opción de “compra del código”.
-                      </li>
-                    </ul>
-                  </AccordionContent>
-                </AccordionItem>
-
-                <AccordionItem value="billing">
-                  <AccordionTrigger>Pagos, facturación y ajustes</AccordionTrigger>
-                  <AccordionContent>
-                    <ul className="space-y-2 text-card-foreground/80">
-                      <li>
-                        <strong>Ciclo:</strong> el abono se paga <strong>mensual por adelantado</strong> (del día 1 al 10).
-                      </li>
-                      <li>
-                        <strong>Ajustes:</strong> el abono puede ajustarse <strong>trimestralmente</strong> (ej. IPC/mercado), notificando con <strong>15 días</strong>.
-                      </li>
-                      <li>
-                        <strong>Suspensión por mora:</strong> si al día 15 no se registra el pago, el sitio puede mostrarse como “Mantenimiento Administrativo”.
-                      </li>
-                      <li>
-                        <strong>Reactivación:</strong> pago del mes adeudado + costo administrativo de reconexión.
-                      </li>
-                      <li>
-                        <strong>Baja definitiva:</strong> pasado un período prolongado de impago, se procede a la baja y eliminación de datos de servidores.
-                      </li>
-                    </ul>
-                    <div className="mt-4 rounded-lg border border-border/60 bg-background p-4">
-                      <p className="text-sm text-muted-foreground">
-                        Nota: estas reglas buscan garantizar continuidad del servicio, calidad de infraestructura y previsibilidad operativa.
-                      </p>
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-
-                <AccordionItem value="exclusions">
-                  <AccordionTrigger>Exclusiones (se cotiza aparte)</AccordionTrigger>
-                  <AccordionContent>
-                    <ul className="space-y-2 text-card-foreground/80">
-                      <li>
-                        El abono cubre <strong>mantenimiento de lo existente</strong>. Cualquier desarrollo nuevo se cotiza por separado.
-                      </li>
-                      <li>
-                        No incluye: <strong>rediseños estructurales</strong>, nuevas páginas internas, carrito de compra, campañas publicitarias (Google Ads) ni redacción de artículos SEO.
-                      </li>
-                      <li>
-                        No incluye soporte externo: hardware, internet del local, impresoras, o recuperación de contraseñas de redes sociales personales.
-                      </li>
-                    </ul>
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
-            </CardContent>
-          </Card>
-
-          {/* SLA + Fair Use */}
-          <Card className="border-border/60">
-            <CardContent className="p-7">
-              <div className="flex items-center gap-3">
-                <Clock className="h-5 w-5 text-primary" />
-                <h2 className="font-['Playfair_Display'] text-2xl font-semibold text-card-foreground">
-                  Soporte y SLA
-                </h2>
-              </div>
-
-              <div className="mt-5 space-y-4 text-card-foreground/80">
-                <p>
-                  El soporte es <strong>asincrónico y escalable</strong>. El alcance se limita a infraestructura, disponibilidad y contenido del sitio provisto.
-                </p>
-
-                <div className="rounded-xl border border-border/60 overflow-hidden">
-                  <div className="grid grid-cols-12 bg-background px-4 py-3 text-xs font-medium text-muted-foreground">
-                    <div className="col-span-2">Nivel</div>
-                    <div className="col-span-5">Definición</div>
-                    <div className="col-span-3">Respuesta</div>
-                    <div className="col-span-2">Canal</div>
-                  </div>
-                  {sla.map((row) => (
-                    <div
-                      key={row.level}
-                      className="grid grid-cols-12 gap-2 border-t border-border/60 px-4 py-3 text-sm"
-                    >
-                      <div className="col-span-2">
-                        <Badge
-                          variant="secondary"
-                          className={
-                            row.level === "P1"
-                              ? "bg-destructive/10 text-destructive border-destructive/20"
-                              : row.level === "P2"
-                              ? "bg-primary/10 text-primary border-primary/20"
-                              : "bg-muted text-muted-foreground border-border/60"
-                          }
-                        >
-                          {row.level}
-                        </Badge>
-                      </div>
-                      <div className="col-span-5">
-                        <p className="font-medium text-card-foreground">{row.label}</p>
-                        <p className="text-muted-foreground">{row.definition}</p>
-                      </div>
-                      <div className="col-span-3 text-card-foreground">{row.response}</div>
-                      <div className="col-span-2 text-muted-foreground">{row.channel}</div>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="mt-6 rounded-xl border border-border/60 bg-background p-5">
-                  <div className="flex items-start gap-3">
-                    <Wrench className="h-5 w-5 text-primary mt-0.5" />
-                    <div>
-                      <p className="font-medium text-card-foreground">Fair Use (cupo de cambios)</p>
-                      <ul className="mt-2 space-y-2 text-card-foreground/80">
-                        <li>
-                          Incluye <strong>1 (una) solicitud de cambios por mes</strong> (puede agrupar varios cambios si se envían en un solo pedido).
-                        </li>
-                        <li>
-                          Si necesitás más cambios en el mismo mes: se agenda al mes siguiente (sin cargo) o se cotiza un <strong>pack adicional</strong>.
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-4 rounded-xl border border-border/60 bg-background p-5">
-                  <div className="flex items-start gap-3">
-                    <AlertTriangle className="h-5 w-5 text-primary mt-0.5" />
-                    <div>
-                      <p className="font-medium text-card-foreground">Canales y circuito de soporte</p>
-                      <ul className="mt-2 space-y-2 text-card-foreground/80">
-                        <li>
-                          Las solicitudes de cambio (P2) ingresan por <strong>Formulario/Portal de Soporte</strong>.
-                        </li>
-                        <li>
-                          Urgencias (P1) se atienden por WhatsApp con la keyword <strong>“URGENCIA”</strong>.
-                        </li>
-                        <li>
-                          El proceso: recepción → clasificación → ejecución → notificación de cierre.
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-
-                <p className="text-xs text-muted-foreground">
-                  Este resumen no reemplaza el documento completo; funciona como guía rápida para clientes.
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Optional: client-friendly footer note */}
-        <div className="mt-12 text-center">
-          <p className="text-sm text-muted-foreground">
-            ¿Tenés dudas sobre alcance, cambios o soporte? Pedinos aclaraciones antes de confirmar el alta.
-          </p>
-        </div>
+      <div className="text-center mb-12">
+        <p className="text-sm uppercase tracking-widest text-muted-foreground mb-2">Marco legal</p>
+        <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-3">Términos del servicio</h2>
+        <p className="text-muted-foreground max-w-xl mx-auto text-sm">
+          Al abonar el desarrollo o la primera cuota de mantenimiento, el cliente acepta las condiciones detalladas a continuación.
+        </p>
       </div>
-    </section>
-  );
-};
+
+      {/* Summary strip */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-10">
+        {[
+          { icon: <FileCheck className="h-4 w-4" />,     text: "El sitio es tuyo" },
+          { icon: <ShieldCheck className="h-4 w-4" />,   text: "Sin permanencia" },
+          { icon: <CreditCard className="h-4 w-4" />,    text: "Mantenimiento opcional" },
+          { icon: <MessageCircle className="h-4 w-4" />, text: "Soporte por WhatsApp" },
+        ].map(({ icon, text }) => (
+          <div key={text} className="flex items-center gap-2.5 rounded-lg border border-border/50 bg-card px-4 py-3">
+            <span className="text-primary shrink-0">{icon}</span>
+            <span className="text-xs font-medium text-foreground/80">{text}</span>
+          </div>
+        ))}
+      </div>
+
+      <div className="grid gap-6 md:grid-cols-2 mb-8">
+
+        {/* Terms accordion */}
+        <TermCard icon={<ShieldCheck className="h-4 w-4" />} title="Términos clave">
+          <Accordion type="single" collapsible>
+            <AccordionItem value="ownership">
+              <AccordionTrigger className="text-sm">Propiedad del sitio</AccordionTrigger>
+              <AccordionContent>
+                <ul className="space-y-2 text-sm text-muted-foreground">
+                  <li><strong className="text-foreground">El sitio es 100% tuyo</strong> desde el momento en que se entrega, sin condiciones de uso ni licencias que lo limiten.</li>
+                  <li>El dominio se registra a nombre del cliente. Lo pagás y administrás vos directamente.</li>
+                  <li>Si decidís no continuar con el mantenimiento, el sitio sigue siendo tuyo y podés trasladarlo al proveedor que prefieras.</li>
+                  <li>El cliente declara poseer derechos sobre el contenido (textos, fotos, logos) provisto para el sitio.</li>
+                </ul>
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="billing">
+              <AccordionTrigger className="text-sm">Pagos y cancelación</AccordionTrigger>
+              <AccordionContent>
+                <ul className="space-y-2 text-sm text-muted-foreground">
+                  <li>El desarrollo se abona según lo acordado al inicio del proyecto.</li>
+                  <li>El mantenimiento mensual es <strong className="text-foreground">opcional</strong> y se abona por adelantado entre el día 1 y 10 de cada mes.</li>
+                  <li>Podés dar de baja el mantenimiento cuando quieras, sin permanencia ni penalidad, avisando con 30 días de anticipación.</li>
+                  <li>Los precios del mantenimiento pueden ajustarse con 15 días de preaviso.</li>
+                  <li>No se realizan devoluciones una vez iniciado el desarrollo.</li>
+                </ul>
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="data">
+              <AccordionTrigger className="text-sm">Privacidad y datos</AccordionTrigger>
+              <AccordionContent>
+                <ul className="space-y-2 text-sm text-muted-foreground">
+                  <li>El cliente es responsable del cumplimiento de la normativa de protección de datos aplicable a su actividad.</li>
+                  <li>Se aplican medidas técnicas de seguridad estándar. No se garantiza invulnerabilidad absoluta ante ataques externos.</li>
+                  <li>No compartimos datos del cliente con terceros salvo requerimiento legal.</li>
+                </ul>
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="exclusions">
+              <AccordionTrigger className="text-sm">Qué no está incluido</AccordionTrigger>
+              <AccordionContent>
+                <ul className="space-y-2 text-sm text-muted-foreground">
+                  <li>Desarrollos nuevos o rediseños estructurales (se cotizan aparte).</li>
+                  <li>Campañas publicitarias ni posicionamiento SEO avanzado.</li>
+                  <li>Soporte de hardware, correo en celular, redes sociales o plataformas externas.</li>
+                  <li>No se garantizan resultados comerciales ni de posicionamiento.</li>
+                  <li>No cubre daños derivados de información incorrecta o negligencia del cliente.</li>
+                </ul>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </TermCard>
+
+        {/* SLA */}
+        <TermCard icon={<Clock className="h-4 w-4" />} title="Soporte y tiempos de respuesta">
+          <p className="text-xs text-muted-foreground mb-4">
+            El soporte aplica a clientes con mantenimiento activo. Los tiempos son orientativos; la resolución puede depender de proveedores externos.
+          </p>
+
+          <div className="rounded-lg border border-border/50 overflow-hidden mb-4">
+            <div className="grid grid-cols-12 bg-muted/40 px-3 py-2 text-xs font-medium text-muted-foreground">
+              <div className="col-span-2">Nivel</div>
+              <div className="col-span-5">Situación</div>
+              <div className="col-span-5">Respuesta</div>
+            </div>
+            {sla.map((row) => (
+              <div key={row.level} className="grid grid-cols-12 gap-1 border-t border-border/50 px-3 py-3 text-xs items-start">
+                <div className="col-span-2">
+                  <span className="inline-block px-1.5 py-0.5 rounded text-white font-bold text-[10px]" style={{ background: row.color }}>
+                    {row.level}
+                  </span>
+                </div>
+                <div className="col-span-5">
+                  <p className="font-medium text-foreground/90 mb-0.5">{row.label}</p>
+                  <p className="text-muted-foreground leading-snug">{row.definition}</p>
+                </div>
+                <div className="col-span-5">
+                  <p className="text-foreground/80 font-medium">{row.response}</p>
+                  <p className="text-muted-foreground mt-0.5">{row.channel}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="rounded-lg border border-border/50 bg-muted/20 px-4 py-3 text-xs text-muted-foreground space-y-1">
+            <p className="font-medium text-foreground/80 mb-1">Backups (clientes con mantenimiento)</p>
+            <p>• Se realizan backups periódicos automáticos del sitio.</p>
+            <p>• La continuidad del hosting depende del pago regular del mantenimiento.</p>
+            <p>• Al dar de baja, gestionamos la entrega del sitio para que puedas migrarlo.</p>
+          </div>
+        </TermCard>
+      </div>
+
+      <div className="flex items-start gap-3 rounded-xl border border-border/50 bg-muted/20 p-5">
+        <AlertTriangle className="h-4 w-4 text-muted-foreground mt-0.5 shrink-0" />
+        <p className="text-xs text-muted-foreground leading-relaxed">
+          Estos términos rigen a partir de la aceptación del presupuesto o el primer pago. Cualquier duda sobre el alcance debe consultarse <strong className="text-foreground">antes</strong> de contratar. Jurisdicción: los tribunales ordinarios del domicilio del prestador.
+        </p>
+      </div>
+
+      <div className="d- flex justify-center">
+        <Link to="/" className={`w-300 inline-flex items-center justify-center gap-2 font-bold py-3 px-6 rounded-xl transition-all duration-300 hover:-translate-y-0.5 bg-accent text-accent-foreground hover:bg-accent/90 shadow-lg shadow-accent/25`}>
+          Volver al inicio
+        </Link>
+      </div>
+
+    </div>
+  </section>
+);
 
 export default LegalTerms;

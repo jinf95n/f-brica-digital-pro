@@ -7,7 +7,7 @@ const WHATSAPP_LINK = "https://wa.me/5493517311760?text=Hola!%20Quiero%20mi%20si
 const links = [
   { label: "El Problema", href: "#problema" },
   { label: "Solución", href: "#solucion" },
-  { label: "Portfolio", href: "#portfolio" },
+  { label: "Demos", href: "#demos" },
   { label: "Planes", href: "#planes" },
   { label: "FAQ", href: "#faq" },
 ];

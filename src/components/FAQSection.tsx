@@ -9,35 +9,50 @@ import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 const faqs = [
   {
-    question: "¿Por qué pagar un mantenimiento?",
-    answer:
-      'Es como un empleado que trabaja 24/7. Incluye servidores seguros, actualizaciones de seguridad, certificado SSL renovado, backups y soporte técnico humano. Sin esto, tu sitio queda desprotegido y offline.',
-  },
-  {
-    question: "¿El sitio es mío?",
-    answer:
-      "El dominio y el contenido son 100% tuyos. La tecnología (hosting, servidor, código) la ponemos nosotros como parte del servicio. Si decidís irte, te entregamos todo tu contenido.",
-  },
-  {
-    question: "¿Tengo permanencia?",
-    answer:
-      "No. Podés darte de baja cuando quieras sin penalización. Creemos que te quedás porque estás conforme, no porque estás atrapado.",
-  },
-  {
-    question: "¿Qué pasa si necesito cambios en mi sitio?",
-    answer:
-      "Los planes con mantenimiento incluyen cambios mensuales sin costo adicional. Actualizamos textos, fotos, información de contacto y más. Solo nos escribís por WhatsApp.",
-  },
-  {
-    question: "¿Puedo ver ejemplos de sitios que hicieron?",
-    answer:
-      "¡Claro! Mirá nuestra sección de Portfolio más arriba o escribinos por WhatsApp y te mandamos ejemplos personalizados de negocios similares al tuyo.",
-  },
-  {
-    question: "¿Qué incluye exactamente el dominio .com.ar?",
-    answer:
-      "Registramos tu dominio a tu nombre. Es tuyo. Incluimos la configuración de DNS, certificado SSL y todo lo necesario para que tu sitio funcione de forma segura.",
-  },
+  question: "¿El sitio es mío?",
+  answer:
+    "Sí. El sitio es 100% tuyo. Está a tu nombre y sos el propietario. Nosotros lo desarrollamos y lo dejamos funcionando para tu negocio. Si algún día decidís no continuar con nosotros, el sitio sigue siendo tuyo.",
+},
+{
+  question: "¿El dominio quién lo paga?",
+  answer:
+    "El dominio se registra a tu nombre y lo pagás vos directamente (por ejemplo .com.ar o .com). Nosotros nos encargamos de configurarlo correctamente para que todo funcione sin complicaciones.",
+},
+{
+  question: "¿Por qué conviene el mantenimiento mensual?",
+  answer:
+    "Porque el sitio no es autoadministrable y requiere gestión técnica. El mantenimiento incluye servidor profesional, seguridad activa, backups automáticos, monitoreo y soporte para cambios. Si contrataras hosting, técnico y soporte por separado, el costo sería mayor y tendrías que ocuparte vos de coordinar todo.",
+},
+{
+  question: "¿Es obligatorio contratar el mantenimiento?",
+  answer:
+    "No es obligatorio. Podés contratar solo el desarrollo inicial. Sin embargo, el mantenimiento es la forma más simple y segura de asegurarte que tu sitio esté siempre online, protegido y actualizado sin que tengas que ocuparte de nada técnico.",
+},
+{
+  question: "¿Qué pasa si no contrato mantenimiento?",
+  answer:
+    "El sitio seguirá siendo tuyo, pero deberás contratar por tu cuenta servidor, seguridad y soporte técnico. Nosotros no podremos garantizar funcionamiento, actualizaciones ni asistencia ante problemas si no está activo el servicio de mantenimiento.",
+},
+{
+  question: "¿Qué incluye exactamente el mantenimiento?",
+  answer:
+    "Incluye hosting profesional, certificado SSL, seguridad, backups automáticos, monitoreo 24/7 y soporte para cambios básicos como textos, fotos o datos de contacto. Todo gestionado por nuestro equipo.",
+},
+{
+  question: "¿Puedo pedir cambios en mi sitio?",
+  answer:
+    "Sí. Con mantenimiento activo podés solicitar ajustes básicos sin costo adicional. Solo nos escribís por WhatsApp y lo resolvemos. Sin mantenimiento, los cambios se cotizan por separado.",
+},
+{
+  question: "¿Tengo permanencia?",
+  answer:
+    "No. Podés dar de baja el mantenimiento cuando quieras. Elegimos trabajar por confianza, no por contratos forzados.",
+},
+{
+  question: "¿Puedo ver ejemplos de trabajos realizados?",
+  answer:
+    "Sí. Podemos enviarte ejemplos de sitios desarrollados para empresas similares a la tuya. Escribinos por WhatsApp y te compartimos referencias.",
+}
 ];
 
 const FAQSection = () => {
