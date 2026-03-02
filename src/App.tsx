@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Terminos from "./pages/Terminos";
+import Privacypolicy from "./pages/Privacypolicy";
 
 const queryClient = new QueryClient();
 
@@ -36,6 +37,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/terminos" element={<Terminos />} />
+          <Route path="/privacidad" element={<Privacypolicy />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
