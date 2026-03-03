@@ -7,11 +7,11 @@ const WHATSAPP_LINK =
 
 const plans = [
   {
-    name: "Plan Inicio",
+    name: "Plan Financiado",
     tagline: "Para empezar hoy",
     price: "$200.000",
     priceDetail: "Desarrollo del sitio (propiedad tuya)",
-    extra: "Mantenimiento opcional",
+    extra: "+ cuotas",
     featured: false,
     features: [
       "Sitio web profesional 100% tuyo",
@@ -26,7 +26,6 @@ const plans = [
     tagline: "El más elegido",
     price: "$400.000",
     priceDetail: "Desarrollo completo",
-    extra: "+ $25.000/mes mantenimiento opcional",
     featured: true,
     features: [
       "Todo lo del Plan Inicio",
