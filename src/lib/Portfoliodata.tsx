@@ -156,7 +156,7 @@ export const demos: DemoItem[] = [
   {
     title: "El Descubridor Vinoteca",
     categoryKey: "food",
-    href: "https://el-descubridor-vinoteca.vercel.app/",
+    href: "https://demo-vinotecamcm.vercel.app/",
     cover: imagen14,
     tags: ["Vinos", "Gastronomía", "Premium"],
     summary: "Vinoteca de autor con selección exclusiva.",

@@ -8,7 +8,7 @@ const links = [
   { label: "El Problema", href: "#problema" },
   { label: "Solución", href: "#solucion" },
   { label: "Demos", href: "#demos" },
-  { label: "Planes", href: "#planes" },
+  { label: "Precios", href: "#cotizador" },
   { label: "FAQ", href: "#faq" },
 ];
 
