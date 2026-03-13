@@ -9,21 +9,24 @@ import PricingSection from "@/components/PricingSection";
 import FAQSection from "@/components/FAQSection";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import ConversionWrapper from "@/components/ConversionWrapper";
 
 const Index = () => {
   return (
     <div className="min-h-screen">
-      <Navbar />
-      <HeroSection />
-      <ProblemSection />
-      <SolutionSection />
-      <StepsSection />
-      <PortfolioSection />
-      <TestimonialsSection />
-      <PricingSection />
-      <FAQSection />
-      <Footer />
-      <WhatsAppButton />
+      <ConversionWrapper>
+        <Navbar />
+        <HeroSection />
+        <ProblemSection />
+        <SolutionSection />
+        <StepsSection />
+        <PortfolioSection />
+        <TestimonialsSection />
+        <PricingSection />
+        <FAQSection />
+        <Footer />
+        <WhatsAppButton />
+      </ConversionWrapper>
     </div>
   );
 };
