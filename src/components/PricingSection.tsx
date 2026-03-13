@@ -23,6 +23,8 @@ import {
   LucideIcon,
 } from "lucide-react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { useConversionOrchestrator } from '@/hooks/useConversionOrchestrator';
+
 
 const WHATSAPP_NUMBER = "5493517311760";
 const LANDING24_PRICE = 250000;
@@ -138,15 +140,16 @@ const additionalFeatures: AdditionalFeature[] = [
     icon: Mail,
   },
   {
-    id: "analytics",
-    name: "Analytics Dashboard",
-    description: "Métricas visuales",
+    id: "otras",
+    name: "Otros",
+    description: "Otras funcionalidades a medida",
     icon: BarChart3,
   },
 ];
 
 const PricingSection = () => {
   const { ref, isVisible } = useScrollReveal();
+  const { markCotizadorSubmitted } = useConversionOrchestrator(); 
   const [step, setStep] = useState(1);
   const [selectedType, setSelectedType] = useState<string>("");
   const [selectedFeatures, setSelectedFeatures] = useState<string[]>([]);
@@ -925,25 +928,26 @@ const PricingSection = () => {
 
             {/* CTA */}
             <div className="bg-gradient-to-br from-primary/10 to-transparent rounded-2xl p-6 text-center border border-primary/20">
-              <p className="text-sm text-muted-foreground mb-1">
-                ⏰ Oferta válida por
-              </p>
-              <p className="text-2xl font-black text-foreground mb-4">
-                48 HORAS
-              </p>
-              <a
-                href={`https://wa.me/${WHATSAPP_NUMBER}?text=${getWhatsAppMessage()}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full btn-primary py-5 text-xl font-black flex items-center justify-center gap-3 shadow-2xl shadow-primary/20 hover:shadow-primary/30 transition-all mb-3"
-              >
-                <MessageCircle className="w-6 h-6" />
-                Confirmar por WhatsApp
-              </a>
-              <p className="text-xs text-muted-foreground">
-                Sin compromiso • Te asesoramos personalmente
-              </p>
-            </div>
+          <p className="text-sm text-muted-foreground mb-1">
+            ⏰ Oferta válida por
+          </p>
+          <p className="text-2xl font-black text-foreground mb-4">
+            48 HORAS
+          </p>
+          <a
+            href={`https://wa.me/${WHATSAPP_NUMBER}?text=${getWhatsAppMessage()}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={markCotizadorSubmitted} 
+            className="w-full btn-primary py-5 text-xl font-black flex items-center justify-center gap-3 shadow-2xl shadow-primary/20 hover:shadow-primary/30 transition-all mb-3"
+          >
+            <MessageCircle className="w-6 h-6" />
+            Confirmar por WhatsApp
+          </a>
+          <p className="text-xs text-muted-foreground">
+            Sin compromiso • Te asesoramos personalmente
+          </p>
+        </div>
 
             <button
               onClick={() => goToStep(3)}

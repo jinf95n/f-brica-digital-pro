@@ -1,7 +1,8 @@
-import { MessageCircle, ArrowRight, TrendingUp, Users, Clock } from "lucide-react";
+// components/HeroSection.tsx
+import { MessageCircle, ArrowRight, TrendingUp, Users, Clock, Zap } from "lucide-react";
 import { motion } from "framer-motion";
 import heroBg from "@/assets/hero-bg.jpg";
-import logo from "@/assets/logo.png";
+import { useConversionOrchestrator } from "@/hooks/useConversionOrchestrator";
 
 const WHATSAPP_LINK = "https://wa.me/5493517311760?text=Hola!%20Quiero%20mi%20sitio%20web";
 
@@ -12,6 +13,8 @@ const stats = [
 ];
 
 const HeroSection = () => {
+  const { scrollToCotizador } = useConversionOrchestrator();
+
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden">
       {/* Background */}
@@ -74,16 +77,57 @@ const HeroSection = () => {
             transition={{ duration: 0.7, delay: 0.6 }}
             className="flex flex-col sm:flex-row gap-4"
           >
+            {/* CTA PRINCIPAL - Cotizar */}
+            <button
+              onClick={scrollToCotizador}
+              className="group relative inline-flex items-center justify-center gap-3 bg-accent hover:bg-accent/90 text-accent-foreground font-black text-lg px-8 py-5 rounded-xl transition-all duration-300 shadow-2xl shadow-accent/30 hover:shadow-accent/40 hover:-translate-y-1 overflow-hidden"
+            >
+              <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+              <Zap className="w-5 h-5" />
+              <span className="flex flex-col items-start">
+                <span>Cotizar mi Sitio</span>
+                <span className="text-xs font-normal opacity-90">Solo 30 segundos</span>
+              </span>
+              <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+            </button>
+
+            {/* CTA SECUNDARIO - WhatsApp */}
             <a
               href={WHATSAPP_LINK}
               target="_blank"
               rel="noopener noreferrer"
-              className="group inline-flex items-center justify-center gap-2 bg-accent hover:bg-accent/90 text-accent-foreground font-bold text-lg px-8 py-4 rounded-xl transition-all duration-300 shadow-lg shadow-accent/25 hover:shadow-xl hover:shadow-accent/30 hover:-translate-y-1"
+              className="inline-flex items-center justify-center gap-2 bg-primary-foreground/10 hover:bg-primary-foreground/20 text-primary-foreground font-semibold text-lg px-8 py-5 rounded-xl transition-all duration-300 border-2 border-primary-foreground/20 hover:border-primary-foreground/30"
             >
               <MessageCircle className="w-5 h-5" />
-              Quiero mi Sitio Ya
-              <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+              Hablar con Asesor
             </a>
+          </motion.div>
+
+          {/* Trust badges */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.7, delay: 0.8 }}
+            className="mt-6 flex flex-wrap gap-4 text-sm text-primary-foreground/60"
+          >
+            <span className="flex items-center gap-1.5">
+              <svg className="w-4 h-4 text-accent" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+              </svg>
+              Sin permanencia
+            </span>
+            <span className="flex items-center gap-1.5">
+              <svg className="w-4 h-4 text-accent" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+              </svg>
+              Precio transparente
+            </span>
+            <span className="flex items-center gap-1.5">
+              <svg className="w-4 h-4 text-accent" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+              </svg>
+              Entrega garantizada
+            </span>
           </motion.div>
         </div>
 
