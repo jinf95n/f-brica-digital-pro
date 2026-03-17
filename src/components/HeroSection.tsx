@@ -3,6 +3,7 @@ import { MessageCircle, ArrowRight, TrendingUp, Users, Clock, Zap } from "lucide
 import { motion } from "framer-motion";
 import heroBg from "@/assets/hero-bg.jpg";
 import { useConversionOrchestrator } from "@/hooks/useConversionOrchestrator";
+import { trackStandardEvent } from "@/lib/metaPixel";
 
 const WHATSAPP_LINK = "https://wa.me/5493517311760?text=Hola!%20Quiero%20mi%20sitio%20web";
 
@@ -14,6 +15,33 @@ const stats = [
 
 const HeroSection = () => {
   const { scrollToCotizador } = useConversionOrchestrator();
+
+  /**
+   * CTA principal: "Cotizar mi Sitio"
+   * → InitiateCheckout: el usuario inicia el flujo real de cotización.
+   */
+  const handleCotizarClick = () => {
+    trackStandardEvent("InitiateCheckout", {
+      content_name: "landing24_quote",
+      placement: "hero_cta",
+      button_name: "cotizar_mi_sitio",
+      source_component: "HeroSection",
+    });
+    scrollToCotizador();
+  };
+
+  /**
+   * CTA secundario: "Hablar con Asesor" (WhatsApp)
+   * → Contact: el usuario inicia una conversación directa.
+   */
+  const handleWhatsAppClick = () => {
+    trackStandardEvent("Contact", {
+      button_name: "hablar_con_asesor",
+      placement: "hero_secondary_cta",
+      whatsapp_number: "5493517311760",
+      source_component: "HeroSection",
+    });
+  };
 
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden">
@@ -77,9 +105,9 @@ const HeroSection = () => {
             transition={{ duration: 0.7, delay: 0.6 }}
             className="flex flex-col sm:flex-row gap-4"
           >
-            {/* CTA PRINCIPAL - Cotizar */}
+            {/* CTA PRINCIPAL */}
             <button
-              onClick={scrollToCotizador}
+              onClick={handleCotizarClick}
               className="group relative inline-flex items-center justify-center gap-3 bg-accent hover:bg-accent/90 text-accent-foreground font-black text-lg px-8 py-5 rounded-xl transition-all duration-300 shadow-2xl shadow-accent/30 hover:shadow-accent/40 hover:-translate-y-1 overflow-hidden"
             >
               <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
@@ -91,11 +119,12 @@ const HeroSection = () => {
               <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
             </button>
 
-            {/* CTA SECUNDARIO - WhatsApp */}
+            {/* CTA SECUNDARIO */}
             <a
               href={WHATSAPP_LINK}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={handleWhatsAppClick}
               className="inline-flex items-center justify-center gap-2 bg-primary-foreground/10 hover:bg-primary-foreground/20 text-primary-foreground font-semibold text-lg px-8 py-5 rounded-xl transition-all duration-300 border-2 border-primary-foreground/20 hover:border-primary-foreground/30"
             >
               <MessageCircle className="w-5 h-5" />

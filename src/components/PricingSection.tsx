@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   CheckCircle,
@@ -24,10 +24,20 @@ import {
 } from "lucide-react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useConversionOrchestrator } from '@/hooks/useConversionOrchestrator';
+import {
+  trackStandardEvent,
+  trackCustomEvent,
+  generateEventId,
+} from "@/lib/metaPixel";
 
+// ─── Constantes ──────────────────────────────────────────────────────────────
 
 const WHATSAPP_NUMBER = "5493517311760";
 const LANDING24_PRICE = 250000;
+const FLOW_NAME = "landing24_quote";
+const SOURCE = "PricingSection";
+
+// ─── Tipos ───────────────────────────────────────────────────────────────────
 
 interface LandingType {
   id: string;
@@ -45,9 +55,11 @@ interface AdditionalFeature {
   icon: LucideIcon;
 }
 
+// ─── Datos ───────────────────────────────────────────────────────────────────
+
 const landingTypes: LandingType[] = [
   {
-    id: "services",
+    id: "vender_servicios",
     name: "Vender Servicios",
     description: "Para profesionales y consultores",
     icon: Target,
@@ -55,7 +67,7 @@ const landingTypes: LandingType[] = [
     isLanding24: true,
   },
   {
-    id: "leads",
+    id: "captar_clientes",
     name: "Captar Clientes",
     description: "Generación de leads y contactos",
     icon: Users,
@@ -63,7 +75,7 @@ const landingTypes: LandingType[] = [
     isLanding24: true,
   },
   {
-    id: "products",
+    id: "mostrar_productos",
     name: "Mostrar Productos",
     description: "Catálogo visual de productos",
     icon: Sparkles,
@@ -71,7 +83,7 @@ const landingTypes: LandingType[] = [
     isLanding24: true,
   },
   {
-    id: "event",
+    id: "evento_lanzamiento",
     name: "Evento/Lanzamiento",
     description: "Promocionar eventos o lanzamientos",
     icon: Calendar,
@@ -79,7 +91,7 @@ const landingTypes: LandingType[] = [
     isLanding24: true,
   },
   {
-    id: "corporate",
+    id: "pagina_corporativa",
     name: "Página Corporativa",
     description: "Información institucional",
     icon: Building2,
@@ -87,7 +99,7 @@ const landingTypes: LandingType[] = [
     isLanding24: true,
   },
   {
-    id: "custom",
+    id: "otro_proyecto",
     name: "Otro Proyecto",
     description: "E-commerce, multi-página, sistemas",
     icon: Globe,
@@ -98,37 +110,37 @@ const landingTypes: LandingType[] = [
 
 const additionalFeatures: AdditionalFeature[] = [
   {
-    id: "multilanguage",
+    id: "multi_idioma",
     name: "Multi-idioma",
     description: "Selector de español/inglés",
     icon: Globe,
   },
   {
-    id: "maps",
+    id: "mapa_interactivo",
     name: "Mapa Interactivo",
     description: "Google Maps embebido",
     icon: MapPin,
   },
   {
-    id: "gallery",
+    id: "galeria_portfolio",
     name: "Galería/Portfolio",
     description: "Showcase de trabajos",
     icon: Image,
   },
   {
-    id: "calculator",
+    id: "cotizador",
     name: "Cotizador",
     description: "Calculadora personalizada",
     icon: Calculator,
   },
   {
-    id: "whatsapp-order",
+    id: "pedidos_whatsapp",
     name: "Pedidos a WhatsApp",
     description: "Carrito simple → WhatsApp",
     icon: ShoppingBag,
   },
   {
-    id: "calendar",
+    id: "calendario_agenda",
     name: "Calendario/Agenda",
     description: "Sistema de reservas básico",
     icon: Clock,
@@ -140,16 +152,27 @@ const additionalFeatures: AdditionalFeature[] = [
     icon: Mail,
   },
   {
-    id: "otras",
+    id: "otros",
     name: "Otros",
     description: "Otras funcionalidades a medida",
     icon: BarChart3,
   },
 ];
 
+// ─── Helpers de mapeo ─────────────────────────────────────────────────────────
+
+const managementKeyMap: Record<string, string> = {
+  none: "sin_gestion",
+  monthly: "plan_mensual",
+  annual: "plan_anual",
+};
+
+// ─── Componente ──────────────────────────────────────────────────────────────
+
 const PricingSection = () => {
   const { ref, isVisible } = useScrollReveal();
-  const { markCotizadorSubmitted } = useConversionOrchestrator(); 
+  const { markCotizadorSubmitted } = useConversionOrchestrator();
+
   const [step, setStep] = useState(1);
   const [selectedType, setSelectedType] = useState<string>("");
   const [selectedFeatures, setSelectedFeatures] = useState<string[]>([]);
@@ -157,29 +180,216 @@ const PricingSection = () => {
     "none" | "monthly" | "annual" | null
   >(null);
   const [paymentMethod, setPaymentMethod] = useState<"full" | "installments">(
-    "installments",
+    "installments"
   );
 
+  // ─── Anti-duplicación para eventos de vista de paso ───────────────────────
+  // Usamos un Set para garantizar que QuoteStepViewed se dispara
+  // exactamente una vez por paso, sin importar re-renders.
+  const viewedSteps = useRef<Set<number>>(new Set());
+
+  useEffect(() => {
+    // Solo disparar cuando el cotizador está visible en pantalla
+    if (!isVisible) return;
+    // Evitar duplicados por re-render
+    if (viewedSteps.current.has(step)) return;
+    viewedSteps.current.add(step);
+
+    const selectedTypeName = selectedType;
+    const mgmtKey = managementPlan ? managementKeyMap[managementPlan] : "";
+
+    if (step === 1) {
+      trackCustomEvent("QuoteStepViewed", {
+        step_number: 1,
+        step_name: "objetivo",
+        flow_name: FLOW_NAME,
+      });
+    } else if (step === 2) {
+      trackCustomEvent("QuoteStepViewed", {
+        step_number: 2,
+        step_name: "features",
+        flow_name: FLOW_NAME,
+      });
+    } else if (step === 3) {
+      trackCustomEvent("QuoteStepViewed", {
+        step_number: 3,
+        step_name: "gestion",
+        flow_name: FLOW_NAME,
+      });
+    } else if (step === 4) {
+      // Para el resumen, siempre disparar aunque se haya visto antes,
+      // porque las selecciones pueden haber cambiado.
+      viewedSteps.current.delete(4); // Permite re-disparo en próximas visitas al paso 4
+      trackCustomEvent("QuoteSummaryViewed", {
+        step_number: 4,
+        step_name: "resumen",
+        flow_name: FLOW_NAME,
+        selected_option: selectedTypeName,
+        selected_features_count: selectedFeatures.length,
+        management_option: mgmtKey,
+        quote_total: LANDING24_PRICE,
+      });
+    }
+  }, [step, isVisible]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // ─── Datos derivados ──────────────────────────────────────────────────────
+
   const isLanding24 =
-    landingTypes.find((t) => t.id === selectedType)?.isLanding24 || false;
+    landingTypes.find((t) => t.id === selectedType)?.isLanding24 ?? false;
 
   const managementPriceMonthly = 25000;
-  const managementPriceAnnual = managementPriceMonthly * 12 - 50000; // 2 meses gratis
+  const managementPriceAnnual = managementPriceMonthly * 12 - 50000;
+
+  // ─── Navegación entre pasos ───────────────────────────────────────────────
 
   const goToStep = (newStep: number) => {
+    // Disparar StepCompleted para el paso que se está abandonando
+    if (step === 1 && (newStep === 2 || newStep === 5) && selectedType) {
+      trackCustomEvent("QuoteStepCompleted", {
+        step_number: 1,
+        step_name: "objetivo",
+        selected_option: selectedType,
+        flow_name: FLOW_NAME,
+      });
+    } else if (step === 2 && newStep === 3) {
+      trackCustomEvent("QuoteStepCompleted", {
+        step_number: 2,
+        step_name: "features",
+        flow_name: FLOW_NAME,
+        selected_features_count: selectedFeatures.length,
+        selected_features: selectedFeatures,
+      });
+    } else if (step === 3 && newStep === 4 && managementPlan) {
+      trackCustomEvent("QuoteStepCompleted", {
+        step_number: 3,
+        step_name: "gestion",
+        flow_name: FLOW_NAME,
+        management_option: managementKeyMap[managementPlan],
+      });
+    }
+
     setStep(newStep);
     document
       .getElementById("cotizador")
       ?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
-  const toggleFeature = (featureId: string) => {
-    setSelectedFeatures((prev) =>
-      prev.includes(featureId)
-        ? prev.filter((id) => id !== featureId)
-        : [...prev, featureId],
-    );
+  // ─── Handlers con tracking ────────────────────────────────────────────────
+
+  /** Paso 1: selección de tipo de objetivo */
+  const handleTypeSelection = (typeId: string) => {
+    setSelectedType(typeId);
+    trackStandardEvent("CustomizeProduct", {
+      flow_name: FLOW_NAME,
+      step_number: 1,
+      step_name: "objetivo",
+      selected_option: typeId,
+      source_component: SOURCE,
+    });
+    trackCustomEvent("QuoteObjectiveSelected", {
+      flow_name: FLOW_NAME,
+      step_number: 1,
+      step_name: "objetivo",
+      selected_option: typeId,
+      source_component: SOURCE,
+    });
   };
+
+  /** Paso 2: toggle de feature */
+  const handleFeatureToggle = (featureId: string) => {
+    const wasSelected = selectedFeatures.includes(featureId);
+    setSelectedFeatures((prev) =>
+      wasSelected
+        ? prev.filter((id) => id !== featureId)
+        : [...prev, featureId]
+    );
+    trackCustomEvent("QuoteFeatureToggled", {
+      step_number: 2,
+      step_name: "features",
+      flow_name: FLOW_NAME,
+      feature_name: featureId,
+      action: wasSelected ? "deselected" : "selected",
+      source_component: SOURCE,
+    });
+  };
+
+  /** Paso 3: selección de plan de gestión */
+  const handleManagementSelection = (plan: "none" | "monthly" | "annual") => {
+    setManagementPlan(plan);
+    trackCustomEvent("QuoteManagementSelected", {
+      step_number: 3,
+      step_name: "gestion",
+      flow_name: FLOW_NAME,
+      management_option: managementKeyMap[plan],
+      source_component: SOURCE,
+    });
+  };
+
+  /** Paso 4: selección de forma de pago */
+  const handlePaymentMethodSelection = (method: "full" | "installments") => {
+    setPaymentMethod(method);
+    trackCustomEvent("QuotePaymentOptionSelected", {
+      step_number: 4,
+      step_name: "resumen",
+      flow_name: FLOW_NAME,
+      payment_option: method === "full" ? "pago_unico" : "financiado",
+      quote_total: LANDING24_PRICE,
+      source_component: SOURCE,
+    });
+  };
+
+  /**
+   * Paso 4: clic en "Confirmar por WhatsApp".
+   *
+   * REGLA DE NEGOCIO:
+   * - Dispara Contact (estándar): el usuario inicia una conversación por WA.
+   * - Dispara QuoteConfirmedWhatsApp (custom): intención fuerte de cierre.
+   * - NO dispara Lead ni Purchase: no hay conversión confirmada en CRM todavía.
+   * - NO dispara AddPaymentInfo: no se ingresaron datos de pago reales.
+   *
+   * Se usa el mismo eventID para Contact y QuoteConfirmedWhatsApp
+   * para que en el futuro CAPI pueda deduplicarlos correctamente.
+   */
+  const handleWhatsAppConfirm = () => {
+    const mgmtKey = managementPlan ? managementKeyMap[managementPlan] : "";
+    const paymentOption =
+      paymentMethod === "full" ? "pago_unico" : "financiado";
+    const sharedEventId = generateEventId("Contact");
+
+    const baseParams = {
+      flow_name: FLOW_NAME,
+      step_number: 4,
+      step_name: "resumen",
+      placement: "final_summary_cta",
+      button_name: "confirmar_por_whatsapp",
+      whatsapp_number: WHATSAPP_NUMBER,
+      quote_total: LANDING24_PRICE,
+      management_option: mgmtKey,
+      payment_option: paymentOption,
+      selected_option: selectedType,
+      selected_features_count: selectedFeatures.length,
+      source_component: SOURCE,
+    };
+
+    // Evento estándar: Contact (inicia conversación WA)
+    trackStandardEvent("Contact", baseParams, { eventID: sharedEventId });
+
+    // Evento custom: intención fuerte de cierre con detalle completo
+    trackCustomEvent(
+      "QuoteConfirmedWhatsApp",
+      {
+        ...baseParams,
+        selected_features: selectedFeatures,
+        currency: "ARS",
+      },
+      { eventID: sharedEventId }
+    );
+
+    // Notificar al orquestador de conversión para cerrar exit modal, etc.
+    markCotizadorSubmitted();
+  };
+
+  // ─── Mensaje de WhatsApp ──────────────────────────────────────────────────
 
   const getWhatsAppMessage = () => {
     const type = landingTypes.find((t) => t.id === selectedType);
@@ -190,7 +400,7 @@ const PricingSection = () => {
           `📊 Necesito presupuesto para:\n` +
           `• Tipo: ${type?.name}\n` +
           `• Es un proyecto personalizado\n\n` +
-          `¿Podemos agendar una llamada?`,
+          `¿Podemos agendar una llamada?`
       );
     }
 
@@ -208,7 +418,8 @@ const PricingSection = () => {
 
     let totalInvestment = LANDING24_PRICE;
     if (managementPlan === "annual") totalInvestment += managementPriceAnnual;
-    if (managementPlan === "monthly") totalInvestment += managementPriceMonthly;
+    if (managementPlan === "monthly")
+      totalInvestment += managementPriceMonthly;
 
     return encodeURIComponent(
       `¡Hola! Completé el cotizador de Landing24\n\n` +
@@ -221,13 +432,11 @@ const PricingSection = () => {
         (managementPlan !== "none"
           ? `• Gestión: $${(managementPlan === "annual" ? managementPriceAnnual : managementPriceMonthly).toLocaleString("es-AR")}\n`
           : "") +
-        `\nQuiero arrancar!`,
+        `\nQuiero arrancar!`
     );
   };
 
-  const handleTypeSelection = (typeId: string) => {
-    setSelectedType(typeId);
-  };
+  // ─── Renderizado de pasos ─────────────────────────────────────────────────
 
   const renderStep = () => {
     switch (step) {
@@ -340,7 +549,7 @@ const PricingSection = () => {
                     key={feature.id}
                     whileHover={{ scale: 1.03 }}
                     whileTap={{ scale: 0.97 }}
-                    onClick={() => toggleFeature(feature.id)}
+                    onClick={() => handleFeatureToggle(feature.id)}
                     className={`p-4 rounded-xl border-2 text-center transition-all ${
                       isSelected
                         ? "border-primary bg-primary/10 shadow-md"
@@ -415,11 +624,11 @@ const PricingSection = () => {
               </p>
             </div>
 
-            {/* Sin gestión — tarjeta advertencia */}
+            {/* Sin gestión */}
             <motion.button
               whileHover={{ scale: 1.01 }}
               whileTap={{ scale: 0.99 }}
-              onClick={() => setManagementPlan("none")}
+              onClick={() => handleManagementSelection("none")}
               className={`w-full p-5 rounded-2xl border-2 text-left transition-all ${
                 managementPlan === "none"
                   ? "border-orange-400 bg-orange-500/10 shadow-md"
@@ -438,14 +647,35 @@ const PricingSection = () => {
                 )}
               </div>
               <p className="text-xs text-muted-foreground mb-4 ml-7">
-                Te entregamos el sitio completo. Vos te encargás del hosting y mantenimiento técnico.
+                Te entregamos el sitio completo. Vos te encargás del hosting y
+                mantenimiento técnico.
               </p>
 
               <div className="flex flex-wrap gap-x-6 gap-y-1.5 text-sm text-muted-foreground mb-4 ml-7">
-                <span className="flex items-start gap-1.5"><span className="text-orange-500 mt-0.5 flex-shrink-0">•</span>Hosting a contratar con terceros</span>
-                <span className="flex items-start gap-1.5"><span className="text-orange-500 mt-0.5 flex-shrink-0">•</span>SSL y renovaciones a tu cargo</span>
-                <span className="flex items-start gap-1.5"><span className="text-orange-500 mt-0.5 flex-shrink-0">•</span>Backups y seguridad manuales</span>
-                <span className="flex items-start gap-1.5"><span className="text-orange-500 mt-0.5 flex-shrink-0">•</span>Cambios coordinados con un dev externo</span>
+                <span className="flex items-start gap-1.5">
+                  <span className="text-orange-500 mt-0.5 flex-shrink-0">
+                    •
+                  </span>
+                  Hosting a contratar con terceros
+                </span>
+                <span className="flex items-start gap-1.5">
+                  <span className="text-orange-500 mt-0.5 flex-shrink-0">
+                    •
+                  </span>
+                  SSL y renovaciones a tu cargo
+                </span>
+                <span className="flex items-start gap-1.5">
+                  <span className="text-orange-500 mt-0.5 flex-shrink-0">
+                    •
+                  </span>
+                  Backups y seguridad manuales
+                </span>
+                <span className="flex items-start gap-1.5">
+                  <span className="text-orange-500 mt-0.5 flex-shrink-0">
+                    •
+                  </span>
+                  Cambios coordinados con un dev externo
+                </span>
               </div>
 
               <div className="bg-orange-500/10 border border-orange-300/40 rounded-lg p-3 ml-7 flex items-center gap-4">
@@ -454,10 +684,14 @@ const PricingSection = () => {
                     ⚠️ Costo estimado si lo hacés por tu cuenta:
                   </p>
                   <div className="flex items-baseline gap-1">
-                    <span className="text-xl font-black text-foreground">~$50k+</span>
+                    <span className="text-xl font-black text-foreground">
+                      ~$50k+
+                    </span>
                     <span className="text-muted-foreground text-xs">/mes</span>
                   </div>
-                  <p className="text-xs text-muted-foreground/70">Hosting + cambios + imprevistos</p>
+                  <p className="text-xs text-muted-foreground/70">
+                    Hosting + cambios + imprevistos
+                  </p>
                 </div>
               </div>
             </motion.button>
@@ -465,7 +699,9 @@ const PricingSection = () => {
             {/* Separador */}
             <div className="flex items-center gap-4 my-2">
               <div className="flex-1 h-px bg-border" />
-              <span className="text-sm font-semibold text-muted-foreground">O NOS ENCARGAMOS NOSOTROS</span>
+              <span className="text-sm font-semibold text-muted-foreground">
+                O NOS ENCARGAMOS NOSOTROS
+              </span>
               <div className="flex-1 h-px bg-border" />
             </div>
 
@@ -475,7 +711,7 @@ const PricingSection = () => {
               <motion.button
                 whileHover={{ scale: 1.01 }}
                 whileTap={{ scale: 0.99 }}
-                onClick={() => setManagementPlan("monthly")}
+                onClick={() => handleManagementSelection("monthly")}
                 className={`p-6 rounded-2xl border-2 text-left transition-all h-full ${
                   managementPlan === "monthly"
                     ? "border-primary bg-primary/5 shadow-lg"
@@ -483,7 +719,9 @@ const PricingSection = () => {
                 }`}
               >
                 <div className="flex items-start justify-between mb-1">
-                  <h4 className="font-bold text-foreground text-lg">Plan Mensual</h4>
+                  <h4 className="font-bold text-foreground text-lg">
+                    Plan Mensual
+                  </h4>
                   {managementPlan === "monthly" && (
                     <CheckCircle className="w-6 h-6 text-primary flex-shrink-0" />
                   )}
@@ -517,7 +755,9 @@ const PricingSection = () => {
 
                 <div className="bg-card border border-border rounded-lg p-3 mt-auto">
                   <div className="flex items-baseline gap-1">
-                    <span className="text-2xl font-black text-foreground">$25.OOO</span>
+                    <span className="text-2xl font-black text-foreground">
+                      $25.OOO
+                    </span>
                     <span className="text-muted-foreground text-xs">/mes</span>
                   </div>
                   <p className="text-xs text-muted-foreground mt-0.5">
@@ -530,7 +770,7 @@ const PricingSection = () => {
               <motion.button
                 whileHover={{ scale: 1.01 }}
                 whileTap={{ scale: 0.99 }}
-                onClick={() => setManagementPlan("annual")}
+                onClick={() => handleManagementSelection("annual")}
                 className={`p-6 rounded-2xl border-2 text-left transition-all relative overflow-hidden h-full ${
                   managementPlan === "annual"
                     ? "border-primary bg-primary/5 shadow-lg"
@@ -542,7 +782,9 @@ const PricingSection = () => {
                 </div>
 
                 <div className="flex items-start justify-between mb-1">
-                  <h4 className="font-bold text-foreground text-lg">Plan Anual</h4>
+                  <h4 className="font-bold text-foreground text-lg">
+                    Plan Anual
+                  </h4>
                   {managementPlan === "annual" && (
                     <CheckCircle className="w-6 h-6 text-primary flex-shrink-0" />
                   )}
@@ -558,7 +800,9 @@ const PricingSection = () => {
                   </li>
                   <li className="flex items-center gap-2">
                     <CheckCircle className="w-4 h-4 text-primary flex-shrink-0" />
-                    <span><strong>2 meses gratis</strong></span>
+                    <span>
+                      <strong>2 meses gratis</strong>
+                    </span>
                   </li>
                   <li className="flex items-center gap-2">
                     <CheckCircle className="w-4 h-4 text-primary flex-shrink-0" />
@@ -661,7 +905,7 @@ const PricingSection = () => {
                       <div className="flex flex-wrap gap-1.5">
                         {selectedFeatures.map((featureId) => {
                           const feature = additionalFeatures.find(
-                            (f) => f.id === featureId,
+                            (f) => f.id === featureId
                           );
                           return (
                             <span
@@ -676,7 +920,7 @@ const PricingSection = () => {
                     </div>
                   )}
 
-                  {/* Forma de pago dinámica */}
+                  {/* Forma de pago */}
                   <div className="space-y-2 pt-3 border-t border-border">
                     <p className="text-xs font-semibold text-muted-foreground uppercase">
                       Forma de pago:
@@ -684,7 +928,7 @@ const PricingSection = () => {
 
                     <div className="grid grid-cols-2 gap-3">
                       <button
-                        onClick={() => setPaymentMethod("full")}
+                        onClick={() => handlePaymentMethodSelection("full")}
                         className={`p-3 rounded-lg border-2 text-left transition-all ${
                           paymentMethod === "full"
                             ? "border-primary bg-primary/10"
@@ -703,7 +947,9 @@ const PricingSection = () => {
                       </button>
 
                       <button
-                        onClick={() => setPaymentMethod("installments")}
+                        onClick={() =>
+                          handlePaymentMethodSelection("installments")
+                        }
                         className={`p-3 rounded-lg border-2 text-left transition-all relative ${
                           paymentMethod === "installments"
                             ? "border-primary bg-primary/10"
@@ -733,14 +979,13 @@ const PricingSection = () => {
                   </div>
                 </div>
 
-                {/* Cronograma de pagos */}
+                {/* Cronograma */}
                 <div className="bg-card rounded-xl p-5 border border-primary/20">
                   <h4 className="font-bold text-foreground mb-4 text-sm uppercase tracking-wide">
                     📅 Cronograma de pagos
                   </h4>
 
                   <div className="space-y-3">
-                    {/* HOY */}
                     <div className="bg-primary/10 rounded-lg p-4 flex items-center justify-between">
                       <div>
                         <p className="text-xs font-bold text-primary uppercase mb-1">
@@ -761,7 +1006,6 @@ const PricingSection = () => {
                       </span>
                     </div>
 
-                    {/* MES 2 */}
                     {(paymentMethod === "installments" ||
                       managementPlan !== "none") && (
                       <div className="bg-muted/60 rounded-lg p-4">
@@ -787,14 +1031,14 @@ const PricingSection = () => {
                               <div className="text-right">
                                 <span className="text-xs line-through text-muted-foreground/60 mr-1">
                                   $
-                                  {(managementPriceMonthly * 12).toLocaleString(
-                                    "es-AR",
-                                  )}
+                                  {(
+                                    managementPriceMonthly * 12
+                                  ).toLocaleString("es-AR")}
                                 </span>
                                 <span className="font-semibold text-primary">
                                   $
                                   {managementPriceAnnual.toLocaleString(
-                                    "es-AR",
+                                    "es-AR"
                                   )}
                                 </span>
                               </div>
@@ -841,7 +1085,6 @@ const PricingSection = () => {
                       </div>
                     )}
 
-                    {/* Garantía */}
                     <div className="flex items-start gap-2 bg-primary/5 border border-primary/20 rounded-lg p-3">
                       <CheckCircle className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
                       <p className="text-xs text-foreground">
@@ -926,28 +1169,28 @@ const PricingSection = () => {
               </div>
             </div>
 
-            {/* CTA */}
+            {/* CTA Final — "Confirmar por WhatsApp" */}
             <div className="bg-gradient-to-br from-primary/10 to-transparent rounded-2xl p-6 text-center border border-primary/20">
-          <p className="text-sm text-muted-foreground mb-1">
-            ⏰ Oferta válida por
-          </p>
-          <p className="text-2xl font-black text-foreground mb-4">
-            48 HORAS
-          </p>
-          <a
-            href={`https://wa.me/${WHATSAPP_NUMBER}?text=${getWhatsAppMessage()}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={markCotizadorSubmitted} 
-            className="w-full btn-primary py-5 text-xl font-black flex items-center justify-center gap-3 shadow-2xl shadow-primary/20 hover:shadow-primary/30 transition-all mb-3"
-          >
-            <MessageCircle className="w-6 h-6" />
-            Confirmar por WhatsApp
-          </a>
-          <p className="text-xs text-muted-foreground">
-            Sin compromiso • Te asesoramos personalmente
-          </p>
-        </div>
+              <p className="text-sm text-muted-foreground mb-1">
+                ⏰ Oferta válida por
+              </p>
+              <p className="text-2xl font-black text-foreground mb-4">
+                48 HORAS
+              </p>
+              <a
+                href={`https://wa.me/${WHATSAPP_NUMBER}?text=${getWhatsAppMessage()}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={handleWhatsAppConfirm}
+                className="w-full btn-primary py-5 text-xl font-black flex items-center justify-center gap-3 shadow-2xl shadow-primary/20 hover:shadow-primary/30 transition-all mb-3"
+              >
+                <MessageCircle className="w-6 h-6" />
+                Confirmar por WhatsApp
+              </a>
+              <p className="text-xs text-muted-foreground">
+                Sin compromiso • Te asesoramos personalmente
+              </p>
+            </div>
 
             <button
               onClick={() => goToStep(3)}
@@ -1014,7 +1257,9 @@ const PricingSection = () => {
 
               <div className="bg-muted/50 rounded-xl p-5 mb-6 max-w-lg mx-auto">
                 <p className="text-sm text-muted-foreground">
-                  <strong className="text-foreground">Tiempo estimado:</strong>{" "}
+                  <strong className="text-foreground">
+                    Tiempo estimado:
+                  </strong>{" "}
                   2-4 semanas
                   <br />
                   <strong className="text-foreground">Inversión:</strong> Desde
@@ -1026,6 +1271,18 @@ const PricingSection = () => {
                 href={`https://wa.me/${WHATSAPP_NUMBER}?text=${getWhatsAppMessage()}`}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => {
+                  // Para proyectos custom: Contact al hacer clic en agendar llamada
+                  trackStandardEvent("Contact", {
+                    flow_name: FLOW_NAME,
+                    step_name: "custom_project",
+                    placement: "custom_project_cta",
+                    button_name: "agendar_llamada",
+                    whatsapp_number: WHATSAPP_NUMBER,
+                    selected_option: selectedType,
+                    source_component: SOURCE,
+                  });
+                }}
                 className="w-full max-w-md mx-auto btn-primary py-5 text-xl font-black flex items-center justify-center gap-3 shadow-2xl shadow-blue-500/20 mb-4"
               >
                 <MessageCircle className="w-6 h-6" />
@@ -1053,6 +1310,8 @@ const PricingSection = () => {
     }
   };
 
+  // ─── Render ───────────────────────────────────────────────────────────────
+
   return (
     <section className="py-20 md:py-28 bg-muted/50" id="cotizador" ref={ref}>
       <div className="container">
@@ -1073,7 +1332,7 @@ const PricingSection = () => {
           </p>
         </motion.div>
 
-        {/* Progress Bar - Solo para Landing24 */}
+        {/* Progress Bar */}
         {isLanding24 && step !== 5 && (
           <div className="max-w-3xl mx-auto mb-8">
             <div className="flex items-center justify-between mb-3">
