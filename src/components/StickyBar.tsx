@@ -2,11 +2,24 @@
 import { X, Zap } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useConversionOrchestrator } from '@/hooks/useConversionOrchestrator';
+import { trackStandardEvent } from '@/lib/metaPixel';
 
 const StickyBar = () => {
   const { state, dismissStickyBar, scrollToCotizador } = useConversionOrchestrator();
 
-  console.log('🎨 StickyBar render:', { showStickyBar: state.showStickyBar });
+  /**
+   * "Cotizar Ahora" en la sticky bar.
+   * → InitiateCheckout: el usuario decide iniciar el cotizador desde este CTA.
+   */
+  const handleCotizarClick = () => {
+    trackStandardEvent('InitiateCheckout', {
+      content_name: 'landing24_quote',
+      placement: 'sticky_bar',
+      button_name: 'cotizar_ahora',
+      source_component: 'StickyBar',
+    });
+    scrollToCotizador();
+  };
 
   return (
     <AnimatePresence>
@@ -26,15 +39,15 @@ const StickyBar = () => {
                 Descubrilo en 30 segundos
               </p>
             </div>
-            
+
             <div className="flex items-center gap-2">
               <button
-                onClick={scrollToCotizador}
+                onClick={handleCotizarClick}
                 className="bg-primary text-primary-foreground font-bold text-sm px-4 md:px-6 py-2 rounded-lg hover:bg-primary/90 transition-colors whitespace-nowrap"
               >
                 Cotizar Ahora
               </button>
-              
+
               <button
                 onClick={dismissStickyBar}
                 className="p-2 hover:bg-white/10 rounded-lg transition-colors"
