@@ -13,7 +13,10 @@ import imagen12 from "@/assets/demos/steel.png";
 import imagen13 from "@/assets/demos/tecno.png";
 import imagen14 from "@/assets/demos/vinoteca.png";
 import imagen15 from "@/assets/demos/wanfix.png";
-import imagen16 from "@/assets/demos/yanina.png"; 
+import imagen16 from "@/assets/demos/yanina.png";
+import imagen17 from "@/assets/demos/venue.png"; 
+import imagen18 from "@/assets/demos/festiland.png"; 
+
 
 
 export type CategoryKey =
@@ -190,6 +193,22 @@ export const demos: DemoItem[] = [
     categoryKey: "construction",
     href: "https://myc-steel-solutions.vercel.app/",
     cover: imagen11,
+    tags: ["Steel Frame", "Construcción", "Ingeniería"],
+    summary: "Soluciones integrales en steel frame.",
+  },
+  {
+    title: "VENUE Salon de Eventos",
+    categoryKey: "events",
+    href: "https://venue-l24.vercel.app/",
+    cover: imagen17,
+    tags: ["Steel Frame", "Construcción", "Ingeniería"],
+    summary: "Soluciones integrales en steel frame.",
+  },
+  {
+    title: "FESTILAND Salón de Fiestas Infantiles",
+    categoryKey: "events",
+    href: "https://festiland-l24.vercel.app/",
+    cover: imagen18,
     tags: ["Steel Frame", "Construcción", "Ingeniería"],
     summary: "Soluciones integrales en steel frame.",
   },
