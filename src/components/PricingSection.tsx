@@ -393,8 +393,8 @@ const PricingSection = () => {
         `• Tipo: ${type?.name}\n` +
         `• Features extra: ${features || "Solo lo básico"}\n` +
         `• Gestión técnica: ${managementText}\n` +
-        `• Pago desarrollo: ${paymentMethod === "full" ? "Único" : "Financiado ($150k + $100k)"}\n` +
-        `• Inversión desarrollo: $${LANDING24_PRICE.toLocaleString("es-AR")}\n` +
+        `• Pago desarrollo: ${paymentMethod === "full" ? "Único" : "Financiado ($150k + $150k)"}\n` +
+        `• Inversión desarrollo: $${(paymentMethod === "installments" ? 300000 : LANDING24_PRICE).toLocaleString("es-AR")}\n` +
         (managementPlan !== "none"
           ? `• Gestión: $${(managementPlan === "annual" ? managementPriceAnnual : managementPriceMonthly).toLocaleString("es-AR")}\n`
           : "") +
@@ -815,7 +815,7 @@ const PricingSection = () => {
       case 4: {
         const developmentAmount = LANDING24_PRICE;
         const firstInstallment = 150000;
-        const secondInstallment = 100000;
+        const secondInstallment = 150000;
 
         return (
           <motion.div
@@ -913,9 +913,7 @@ const PricingSection = () => {
                             : "border-border hover:border-primary/30"
                         }`}
                       >
-                        <div className="absolute -top-1.5 -right-1.5 md:-top-2 md:-right-2 bg-primary text-primary-foreground text-xs font-bold px-1.5 md:px-2 py-0.5 rounded-full">
-                          SIN INTERÉS
-                        </div>
+                       
                         <div className="flex items-start justify-between mb-1">
                           <span className="text-xs md:text-sm font-bold">
                             Financiado
