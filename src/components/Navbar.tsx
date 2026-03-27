@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Menu, X, MessageCircle } from "lucide-react";
 import logo from "@/assets/logo.png";
+import logoCorto from "@/assets/logo-corto.png";
 import { trackStandardEvent } from "@/lib/metaPixel";
 
 const WHATSAPP_LINK = "https://wa.me/5493517311760?text=Hola!%20Quiero%20mi%20sitio%20web";
@@ -15,11 +16,17 @@ const links = [
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
-  /**
-   * Botón "Contactar" de la Navbar (WhatsApp).
-   * → Contact: el usuario inicia contacto desde la barra de navegación.
-   */
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 40);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   const handleContactClick = (placement: 'navbar_desktop' | 'navbar_mobile') => {
     trackStandardEvent('Contact', {
       button_name: 'contactar_navbar',
@@ -30,10 +37,29 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-40 bg-primary/95 backdrop-blur-md border-b border-primary-foreground/10">
-      <div className="container flex items-center justify-between h-16">
-        <a href="#" className="flex items-center gap-3">
-          <img src={logo} alt="Fábrica Digital" className="h-9 w-auto" />
+    <nav
+      className={`fixed top-0 left-0 right-0 z-40 bg-primary border-b border-primary-foreground/10 transition-all duration-500 ease-in-out
+        ${scrolled
+          ? "bg-primary/98 shadow-lg shadow-black/30 h-12"
+          : "bg-primary/95 shadow-none h-16"
+        }`}
+    >
+      <div className="container flex items-center justify-between h-full">
+
+        {/* Logo con crossfade */}
+        <a href="#" className="relative flex items-center h-full">
+          <img
+            src={logo}
+            alt="Landing24"
+            className={`h-8 w-auto absolute transition-all duration-500 ease-in-out
+              ${scrolled ? "opacity-0 scale-95" : "opacity-100 scale-100"}`}
+          />
+          <img
+            src={logoCorto}
+            alt="Landing24"
+            className={`h-7 w-auto transition-all duration-500 ease-in-out
+              ${scrolled ? "opacity-100 scale-100" : "opacity-0 scale-95"}`}
+          />
         </a>
 
         {/* Desktop */}
@@ -73,7 +99,7 @@ const Navbar = () => {
       {open && (
         <div className="md:hidden bg-primary border-t border-primary-foreground/10 pb-4 animate-fade-in">
           {links.map((link) => (
-            <a
+           <a 
               key={link.href}
               href={link.href}
               onClick={() => setOpen(false)}
