@@ -8,11 +8,7 @@ const Footer = () => {
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-3">
             <img src={logo} alt="Fábrica Digital" className="h-10 w-auto" />
-            <div>
-              <p className="text-primary-foreground/60 text-sm">
-                Tu negocio merece verse profesional.
-              </p>
-            </div>
+            
           </div>
           <div className="flex items-center gap-6 text-sm text-primary-foreground/60">
             <Link to="/terminos" className="hover:text-primary-foreground transition-colors">
