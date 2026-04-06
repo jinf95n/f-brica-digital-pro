@@ -5,7 +5,7 @@ import heroBg from "@/assets/hero-bg.jpg";
 import { useConversionOrchestrator } from "@/hooks/useConversionOrchestrator";
 import { trackStandardEvent } from "@/lib/metaPixel";
 
-const WHATSAPP_LINK = "https://wa.me/5493517311760?text=Hola!%20Quiero%20mi%20sitio%20web";
+const WHATSAPP_LINK = "https://wa.me/542646233326?text=Hola!%20Quiero%20mi%20sitio%20web";
 
 const stats = [
   { icon: Users, value: "200+", label: "Negocios potenciados" },
@@ -38,7 +38,7 @@ const HeroSection = () => {
     trackStandardEvent("Contact", {
       button_name: "hablar_con_asesor",
       placement: "hero_secondary_cta",
-      whatsapp_number: "5493517311760",
+      whatsapp_number: "542646233326",
       source_component: "HeroSection",
     });
   };

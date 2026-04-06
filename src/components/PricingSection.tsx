@@ -33,7 +33,7 @@ import {
 
 // ─── Constantes ──────────────────────────────────────────────────────────────
 
-const WHATSAPP_NUMBER = "5493517311760";
+const WHATSAPP_NUMBER = "5492646233326";
 const LANDING24_PRICE = 250000;
 const FLOW_NAME = "landing24_quote";
 const SOURCE = "PricingSection";
