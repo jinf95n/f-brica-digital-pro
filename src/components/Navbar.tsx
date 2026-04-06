@@ -4,7 +4,7 @@ import logo from "@/assets/logo.png";
 import logoCorto from "@/assets/logo-corto.png";
 import { trackStandardEvent } from "@/lib/metaPixel";
 
-const WHATSAPP_LINK = "https://wa.me/5493517311760?text=Hola!%20Quiero%20mi%20sitio%20web";
+const WHATSAPP_LINK = "https://wa.me/542646233326?text=Hola!%20Quiero%20mi%20sitio%20web";
 
 const links = [
   { label: "El Problema", href: "#problema" },
@@ -31,7 +31,7 @@ const Navbar = () => {
     trackStandardEvent('Contact', {
       button_name: 'contactar_navbar',
       placement,
-      whatsapp_number: '5493517311760',
+      whatsapp_number: '542646233326',
       source_component: 'Navbar',
     });
   };
