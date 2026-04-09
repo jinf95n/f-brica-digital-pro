@@ -151,7 +151,7 @@ export const demos: DemoItem[] = [
   {
     title: "Baulera",
     categoryKey: "services",
-    href: "https://boxsecurity-demo-mcm.vercel.app/",
+    href: "https://baulera-l24.vercel.app/",
     cover: imagen1,
     tags: ["Seguridad", "Alarmas", "Monitoreo"],
     summary: "Protección total para tu hogar y negocio.",
@@ -159,7 +159,7 @@ export const demos: DemoItem[] = [
   {
     title: "Vinoteca de Autor",
     categoryKey: "food",
-    href: "https://demo-vinotecamcm.vercel.app/",
+    href: "https://vinoteca-l24.vercel.app/",
     cover: imagen14,
     tags: ["Vinos", "Gastronomía", "Premium"],
     summary: "Vinoteca de autor con selección exclusiva.",
@@ -167,7 +167,7 @@ export const demos: DemoItem[] = [
   {
     title: "Centro Salud Mental",
     categoryKey: "health",
-    href: "https://demo-visam.vercel.app/",
+    href: "https://clinicamental-l24.vercel.app/",
     cover: imagen3,
     tags: ["Salud Mental", "Terapias", "Bienestar"],
     summary: "Espacio dedicado a tu salud mental.",
@@ -175,7 +175,7 @@ export const demos: DemoItem[] = [
   {
     title: "Constructora",
     categoryKey: "construction",
-    href: "https://constructorametal-demomcm.vercel.app/",
+    href: "https://constructora-l24.vercel.app/",
     cover: imagen8,
     tags: ["Construcción", "Desarrollos", "Steel Frame"],
     summary: "Constructora desarrollista premium en Córdoba.",
@@ -191,7 +191,7 @@ export const demos: DemoItem[] = [
   {
     title: "Steel Solutions",
     categoryKey: "construction",
-    href: "https://myc-steel-solutions.vercel.app/",
+    href: "https://steel-l24.vercel.app/",
     cover: imagen11,
     tags: ["Steel Frame", "Construcción", "Ingeniería"],
     summary: "Soluciones integrales en steel frame.",
